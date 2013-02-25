@@ -1,7 +1,12 @@
 <?php
-function hello_world($url_params){
+function base($url_params){
 	$name = $url_params[1];
-	include("templates/hello_world.php");
+	$content_block = "templates/base_parts/content_block.php";
+	include("templates/base.php");
+}
+
+function demo($url_params){
+	render("templates/demo/content.php");
 }
 
 function view_2($url_params){
