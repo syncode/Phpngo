@@ -1,7 +1,7 @@
 <?php
 
 	// Base settings
-	define('BASE_URI', '/Projects/Sinapsa/Phpngo/');
+	define('BASE_URI', '/Phpngo/');
 
 	// Media
 	define('MEDIA_URL', 'media/');

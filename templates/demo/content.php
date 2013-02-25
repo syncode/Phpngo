@@ -2,14 +2,14 @@
 
 
 
-{ startblock second }
+<? startblock('second'); ?>
 d<br>
 e<br>
 f<br>
-{ endblock }
+<? endblock(); ?>
 
-{ startblock first }
+<? startblock('first'); ?>
 a<br>
 b<br>
 c<br>
-{ endblock }
+<? endblock(); ?>
