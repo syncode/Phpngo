@@ -1,21 +1,23 @@
 <?php
-
+$outer = '';
+$blocks = array();
 function extend( $template ){
-
+	global $outer;
+	ob_start();
 	include $template;
-
+	$outer = ob_get_clean();
 }
 
 
-function render( $template, $contenxt = array()){
+// function render( $template, $contenxt = array()){
 
-	ob_start("Main::buffer");
+// 	ob_start("Main::buffer");
 
-	include $template;
+// 	include $template;
 
-	ob_end_flush();
+// 	ob_end_flush();
 
-}
+// }
 
 
 function get_view( $view, $uri){

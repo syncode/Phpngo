@@ -1,11 +1,5 @@
 <?php
 
-	function base($url_params){
-		$name = $url_params[1];
-		$content_block = "templates/base_parts/content_block.php";
-		include("templates/base.php");
-	}
-
 	function demo($url_params){
 		render("templates/demo/content.php");
 	}
