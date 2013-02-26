@@ -11,6 +11,7 @@ class Main {
 
 		global $urls;
 		$uri = str_replace(BASE_URI, '', $_SERVER['REQUEST_URI']);
+
 		foreach ($urls as $regex => $view){
 			if( preg_match($regex , $uri) ){
 				return get_view($view, $uri);

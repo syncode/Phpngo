@@ -38,5 +38,5 @@ function replace_blocks(){
 }
 
 function get_view( $view, $uri){
-	return call_user_func( $view , explode('/', $uri) );
+	return (function_exists($view)) ? call_user_func( $view , explode('/', $uri) ) : false ;
 }
