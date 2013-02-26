@@ -1,7 +1,6 @@
 <?php
 
-	$urls = array(
-		'/^demo/' => "demo",
-		'/^css/' => "css",
+	$URLS = array(
+			'/^demo/' => "demo",
+			'/^css/' => "css",
 	);
-
