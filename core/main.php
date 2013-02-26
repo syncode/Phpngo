@@ -15,12 +15,12 @@ class Main {
 				return self::get_view($view, $uri);
 			}
 		}
-		return self::get_view( 'error_404', $uri );
+		return self::get_view( ERROR_404_VIEW, $uri );
 	}
 
 	// calling view function
 	private static function get_view($view, $uri){
-		return call_user_func( $view , explode('/', $uri) );
+		return (function_exists( $view )) ? call_user_func( $view , explode('/', $uri) ) : call_user_func( ERROR_404_VIEW , explode('/', $uri) );
 	}
 
 }

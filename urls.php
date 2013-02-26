@@ -2,5 +2,5 @@
 
 	$URLS = array(
 			'/^demo/' => "demo",
-			'/^css/' => "css",
+			'/^css/' => "css1",
 	);
