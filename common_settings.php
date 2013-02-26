@@ -17,4 +17,8 @@
 
 	// ERRORS
 	define('ERROR_404_VIEW', 'error_404');
+
+	// Template Engine
+	define('OPEN_SYMBOLE', '{');
+	define('CLOSE_SYMBOLE', '}');
 	

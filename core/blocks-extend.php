@@ -48,7 +48,7 @@ function replace_blocks(){
 	global $blocks, $templates_hirarchy;
 	$last = array_shift($templates_hirarchy);
 	foreach ($blocks as $key => $value) {
-		$pattern = '/{[ \t]*block[ \t]*'.$key.'[ \t]*}/';
+		$pattern = '/'.OPEN_SYMBOLE.'[ \t]*block[ \t]*'.$key.'[ \t]*'.CLOSE_SYMBOLE.'/';
 		$last = preg_replace($pattern, $value , $last);
 	}
 	return $last;
