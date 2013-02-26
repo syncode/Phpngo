@@ -4,7 +4,7 @@
 		render("templates/demo/chiled.php");
 	}
 
-	function css($url_params){
+	function demo2($url_params){
 		render("templates/demo/css.php");
 	}
 

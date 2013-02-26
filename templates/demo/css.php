@@ -3,26 +3,29 @@
 <head>
 	<meta charset="UTF-8">
 	<title>CSS</title>
-	<link rel="stylesheet" href="<?php echo MEDIA_URL ?>css/libs/bootstrap.min.css">
-	
-	<!-- PHP:
+	<?php
+
+		// Loading styles
 		load('css', array(
-			'libs/bootstrap.min' => false,
+			'libs/bootstrap.min',
 			'general',
 			'demo'
-		));	
-	-->
+		));
+
+	?>
 
 </head>
 <body>
 	
 	
-	<!-- PHP:
+	<?php
+
+		// Loading the scripts
 		load('js', array(
-			'libs/jquery.min' => false,
+			'libs/jquery.min',
 			'demo'
 		));	
-	-->
 
+	?>
 </body>
 </html>
