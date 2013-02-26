@@ -1,7 +1,7 @@
 <?php
 
 	function demo($url_params){
-		render("templates/demo/content.php");
+		render("templates/demo/chiled.php");
 	}
 
 	function css($url_params){
