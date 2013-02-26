@@ -1,13 +1,13 @@
 <?php
 
 // The settings
-include_once "settings.php";
+require_once('core/settings.php');
 
 // The main urls structure
-include_once "urls.php";
+require_once('urls.php');
 
 // The main views
-include_once "views.php";
+require_once('views.php');
 
 // The Phpngo core
-include_once "core/main.php";
+require_once('core/main.php');
