@@ -1,6 +1,10 @@
 <?php
 
+	global $URLS;
+
 	$URLS = array(
-			'/^demo-2/' => "demo2",
-			'/^demo/' => "demo",
+
+		// Demos
+		'/^demo/' => "demo",
+
 	);

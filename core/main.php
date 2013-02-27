@@ -14,6 +14,7 @@ class Main {
 		// URLS configuration
 		foreach ($URLS as $regex => $view){
 			if( preg_match($regex, $uri) ){
+				if( HTML_COMPRESS ) ob_start('Main::html_compress');
 				return self::get_view($view, $uri);
 			}
 		}
@@ -56,6 +57,10 @@ class Main {
 
 		// 404
 		return self::get_view( ERROR_404_VIEW, $uri );
+	}
+
+	public static function html_compress( $content ){
+        return preg_replace( array('/ {2,}/','/<!--.*?-->|\t|(?:\r?\n[ \t]*)+/s'), array(' ',''), $content );
 	}
 
 	// Executing the view function

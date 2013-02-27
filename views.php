@@ -1,13 +1,8 @@
 <?php
 
 	function demo($url_params){
-		render("templates/demo/chiled.php");
+		render("templates/demo/index.php");
 	}
-
-	function demo2($url_params){
-		render("templates/demo/css.php");
-	}
-
 
 	function error_404($params){
 		$protocol = strpos(strtolower($_SERVER['SERVER_PROTOCOL']),'https') === FALSE ? 'http' : 'https';

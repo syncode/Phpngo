@@ -16,6 +16,8 @@
 	// Don't change the values here - this is only a backup when some
 	// defenitions are not set.
 	$defaults = array(
+		'HTML_COMPRESS' => false,
+
 		'CSS_ENCODE' => true,
 		'CSS_CONCAT' => false,
 		'CSS_COMPRESS' => false,

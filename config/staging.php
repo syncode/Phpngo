@@ -10,6 +10,8 @@
 
 
 	// Media
+	define('HTML_COMPRESS', false);
+	
 	define('CSS_ENCODE', true);
 	define('CSS_CONCAT', true);
 	define('CSS_COMPRESS', true);
