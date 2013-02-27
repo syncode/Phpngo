@@ -9,9 +9,13 @@ function load( $media_type = 'CSS', $files = array() ){
 		case 'CSS':
 			foreach ($files as $file) {
 				if( CSS_CONCAT ){
-					$script_name .= ( $script_name ) ? '+' . $file : $file ;
+					if( strpos($file, 'http://') !== 0 && strpos($file, 'https://') !== 0 ){
+						$script_name .= ( $script_name ) ? '+' . $file : $file ;
+					}else{
+						?><link rel="stylesheet" href="<?php echo $file; ?>"><?php
+					}
 				}else{
-					?><link rel="stylesheet" href="<?php echo MEDIA_URL . CSS_URL . $file . '.css'; ?>"><?php
+					?><link rel="stylesheet" href="<?php echo MEDIA_URL . CSS_URL . $file; ?>"><?php
 				}
 			}
 
@@ -25,9 +29,13 @@ function load( $media_type = 'CSS', $files = array() ){
 		case 'JS': case 'JAVASCRIPT':
 			foreach ($files as $file) {
 				if( JS_CONCAT ){
-					$script_name .= ( $script_name ) ? '+' . $file : $file ;
+					if( strpos($file, 'http://') !== 0 && strpos($file, 'https://') !== 0 ) {
+						$script_name .= ( $script_name ) ? '+' . $file : $file ;
+					}else{
+						?><script src="<?php echo $file; ?>"></script><?php
+					}
 				}else{
-					?><script src="<?php echo MEDIA_URL . JS_URL . $file . '.css'; ?>"></script><?php
+					?><script src="<?php echo MEDIA_URL . JS_URL . $file; ?>"></script><?php
 				}
 			}
 

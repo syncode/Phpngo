@@ -7,9 +7,9 @@
 
 		// Loading styles
 		load('css', array(
-			'libs/bootstrap.min',
-			'general',
-			'demo'
+			'libs/bootstrap.min.css',
+			'general.css',
+			'demo.css'
 		));
 
 	?>
@@ -22,8 +22,8 @@
 
 		// Loading the scripts
 		load('js', array(
-			'libs/jquery.min',
-			'demo'
+			'libs/jquery.min.js',
+			'demo.js'
 		));	
 
 	?>
