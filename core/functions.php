@@ -10,7 +10,7 @@ function load( $media_type = 'CSS', $files = array() ){
 			foreach ($files as $file) {
 				if( CSS_CONCAT ){
 					if( strpos($file, 'http://') !== 0 && strpos($file, 'https://') !== 0 ){
-						$script_name .= ( $script_name ) ? '+' . $file : $file ;
+						$script_name .= ( $script_name ) ? '+' . strstr($file, '.css', true) : strstr($file, '.css', true) ;
 					}else{
 						?><link rel="stylesheet" href="<?php echo $file; ?>"><?php
 					}
@@ -30,7 +30,7 @@ function load( $media_type = 'CSS', $files = array() ){
 			foreach ($files as $file) {
 				if( JS_CONCAT ){
 					if( strpos($file, 'http://') !== 0 && strpos($file, 'https://') !== 0 ) {
-						$script_name .= ( $script_name ) ? '+' . $file : $file ;
+						$script_name .= ( $script_name ) ? '+' . strstr($file, '.js', true) : strstr($file, '.js', true) ;
 					}else{
 						?><script src="<?php echo $file; ?>"></script><?php
 					}
