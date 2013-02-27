@@ -4,7 +4,7 @@
 
 	$URLS = array(
 
-		// Demos
+		'/^$/' => "index",
 		'/^demo/' => "demo",
 
 	);

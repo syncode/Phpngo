@@ -14,20 +14,29 @@ $templates_hirarchy = array();
 $blocks;
 $open_block;
 $extend_count = 0;
-function render( $template, $contenxt = array() ){
-	global $blocks, $templates_hirarchy, $extend_count;
+function render( $template, $context = array() ){
+	global $blocks, $templates_hirarchy, $extend_count, $template_context;
+	foreach ($context as $key => $value) {
+		global $$key;
+		$$key = $value;
+	}
+	$template_context = $context;
 	$blocks = array();
 	ob_start();
-	include( $template );
+	require $template ;
 	$lowest = ob_get_clean();
 	array_push($templates_hirarchy, $lowest);
 	echo replace_blocks();
 }
 function extend( $template ){
-	global $templates_hirarchy, $extend_count;
+	global $templates_hirarchy, $extend_count, $template_context;
+	foreach ($template_context as $key => $value) {
+		global $$key;
+		$$key = $value;
+	}
 	++$extend_count;
 	ob_start();
-	include $template;
+	require $template;
 	$temp = ob_get_clean();
 	array_push($templates_hirarchy, $temp);
 }

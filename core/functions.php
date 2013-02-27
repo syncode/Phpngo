@@ -21,7 +21,7 @@ function load( $media_type = 'CSS', $files = array() ){
 
 			if( $script_name ){
 				if( CSS_ENCODE ){
-					$script_name = base64_encode( $script_name );
+					$script_name = base64_encode( utf8_encode( $script_name )  );
 				}
 				?><link rel="stylesheet" href="css/<?php echo $script_name; ?>/style.css"><?php
 			}
@@ -41,7 +41,7 @@ function load( $media_type = 'CSS', $files = array() ){
 
 			if( $script_name ){
 				if( JS_ENCODE ){
-					$script_name = base64_encode( $script_name );
+					$script_name = base64_encode( utf8_encode( $script_name ) );
 				}
 				?><script src="js/<?php echo $script_name; ?>/script.js"></script><?php
 			}

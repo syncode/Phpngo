@@ -7,10 +7,11 @@
 
 	// Base settings
 	define('BASE_URI', '/Projects/Sinapsa/Phpngo/');
+	define('BASE_URL', (strpos(strtolower($_SERVER['SERVER_PROTOCOL']),'https') === FALSE ? 'http://' : 'https://') . $_SERVER['HTTP_HOST'] . BASE_URI );
 
 
 	// Media
-	define('HTML_COMPRESS', false);
+	define('HTML_COMPRESS', true);
 
 	define('CSS_ENCODE', true);
 	define('CSS_CONCAT', true);

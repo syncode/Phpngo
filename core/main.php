@@ -33,7 +33,7 @@ class Main {
 					CSS_URL,
 					$uri,
 					'css/',
-					'/style.js'
+					'/style.css'
 				);
 
 		// JS files
@@ -84,7 +84,7 @@ class Main {
 		
 		$buffer = '';
 		$cached_string = str_replace($cached_string_prefix, '', str_replace($cached_string_postfix, '', $uri));
-		$files = ( JS_ENCODE ) ? explode('+', base64_decode( $cached_string ) ) : explode('+', $cached_string ) ;
+		$files = ( JS_ENCODE ) ? explode('+', utf8_decode( base64_decode( $cached_string ) ) ) : explode('+', utf8_decode( $cached_string ) ) ;
 		$cached_string = base64_encode( $cached_string );
 
 		if( $cached_string && file_exists( $cache_dir . $cached_string . $ext )){
@@ -93,6 +93,7 @@ class Main {
 		}else{
 			// Concat all files
 			foreach( $files as $index => $file ){
+
 				$file = $file . $ext;
 
 				$temp_buffer = '';
