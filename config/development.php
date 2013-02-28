@@ -11,7 +11,7 @@
 
 
 	// Media
-	define('HTML_COMPRESS', true);
+	define('HTML_COMPRESS', false);
 
 	define('CSS_ENCODE', true);
 	define('CSS_CONCAT', true);
@@ -20,5 +20,5 @@
 
 	define('JS_ENCODE', true);
 	define('JS_CONCAT', true);
-	define('JS_COMPRESS', true);
+	define('JS_COMPRESS', false);
 	define('JS_CACHE_DIR', false);

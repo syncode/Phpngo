@@ -14,6 +14,7 @@ $templates_hirarchy = array();
 $blocks;
 $open_block;
 $extend_count = 0;
+
 function render( $template, $context = array() ){
 	global $blocks, $templates_hirarchy, $extend_count, $template_context;
 	foreach ($context as $key => $value) {
@@ -23,12 +24,22 @@ function render( $template, $context = array() ){
 	$template_context = $context;
 	$blocks = array();
 	ob_start();
-	require $template ;
+	require( TEMPLATES_DIR . $template );
 	$lowest = ob_get_clean();
 	array_push($templates_hirarchy, $lowest);
+
+	if( $_REQUEST['is_ajax'] == 'true' && $_REQUEST['block']){
+		echo (string)$blocks[ $_REQUEST['block'] ];
+		exit;
+	}
+
 	echo replace_blocks();
 }
+
 function extend( $template ){
+	if( $_REQUEST['is_ajax'] == 'true' && $_REQUEST['block'] && $blocks[ $_REQUEST['block'] ] ){
+		return;
+	}
 	global $templates_hirarchy, $extend_count, $template_context;
 	foreach ($template_context as $key => $value) {
 		global $$key;
@@ -36,7 +47,7 @@ function extend( $template ){
 	}
 	++$extend_count;
 	ob_start();
-	require $template;
+	require( TEMPLATES_DIR . $template );
 	$temp = ob_get_clean();
 	array_push($templates_hirarchy, $temp);
 }

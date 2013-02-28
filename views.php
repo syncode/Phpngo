@@ -1,21 +1,27 @@
 <?php
 
 	function index( $url_params ){
-
 		$context = array(
 			'header_selected_menu_item' => 'Home'
 		);
-
-		render('templates/index.php', $context);
+		render('index.php', $context);
 	}
 
-	function demo( $url_params ){
-
+	// Demos
+	function demo_history( $url_params ){
 		$context = array(
-			'header_selected_menu_item' => 'Demo'
+			'header_selected_menu_item' => 'Demo',
+			'demo_selected_menu_item' => 'History API'
 		);
+		render('demo/history-api.php', $context);
+	}
 
-		render('templates/demo.php', $context);
+	function demo_transitions( $url_params ){
+		$context = array(
+			'header_selected_menu_item' => 'Demo',
+			'demo_selected_menu_item' => 'Transitions'
+		);
+		render('demo/transactions.php', $context);
 	}
 
 	function error_404($params){

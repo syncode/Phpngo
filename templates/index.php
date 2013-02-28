@@ -1,6 +1,6 @@
 <?php
-	extend('templates/base.php');
 
+	extend('base.php');
 	
 	// Loading styles
 	block('styles');
@@ -28,13 +28,13 @@
 
 		?>
 		<div class="row">
-			<div class="span4">
+			<div class="span6">
 				<div class="page-header">
 					<h1>Phpngo</h1>
 				</div>
 				<p>A light weight php startring template for your app</p>
 			</div>
-			<div class="span8">...</div>
+			<div class="span6">...</div>
 		</div>
 		<?php
 

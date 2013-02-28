@@ -8,8 +8,7 @@
 
 		// Styles
 		load('css', array(
-			'libs/bootstrap.min.css',
-			'general.css'
+			'libs/bootstrap.min.css'
 		));
 
 	?>
@@ -39,7 +38,8 @@
 		// Scripts
 		load('js', array(
 			'http://code.jquery.com/jquery.min.js',
-			'libs/bootstrap-dropdowns.min.js'
+			'libs/bootstrap-dropdowns.min.js',
+			'libs/core.js'
 		));
 
 	?>

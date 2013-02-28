@@ -8,7 +8,7 @@ class Main {
 	// The core init function, searching for fitting view in urls array and executing it's view
 	public static function init(){
 
-		global $URLS;
+		global $URLS, $_IS_URLS_BEEN_PROCESSED;
 		$uri = str_replace( BASE_URI, '', $_SERVER['REQUEST_URI'] );
 
 		// URLS configuration
@@ -23,8 +23,7 @@ class Main {
 					}
 				}else if( $action && is_array( $action ) && $action[0] == 'view_redirect' ){
 					// Redirect by providing a view name
-					$url = (string)array_search($action[1], $URLS);
-					$url = str_replace('/^', BASE_URL, $url);
+					$url = self::reverse( $action[1], $action[2] );
 
 					if( !headers_sent() && $url){
 						header('Location: ' . $url );
@@ -33,6 +32,7 @@ class Main {
 				}else if( $action ){
 					// Loading view
 					if( HTML_COMPRESS ) ob_start('Main::html_compress');
+					$_IS_URLS_BEEN_PROCESSED = true;
 					return self::load_view( $action, $uri );
 				}
 
@@ -76,11 +76,20 @@ class Main {
 		}
 
 		// 404
+		$_IS_URLS_BEEN_PROCESSED = true;
 		return self::load_view( ERROR_404_VIEW, $uri );
 	}
 
 	public static function html_compress( $content ){
         return preg_replace( array('/ {2,}/','/<!--.*?-->|\t|(?:\r?\n[ \t]*)+/s'), array(' ',''), $content );
+	}
+
+	public static function reverse( $view = '', $args = array() ){
+		global $URLS;
+		$url = (string)array_search($view, $URLS);
+		$url = str_replace('/^', BASE_URL, $url);
+		$url = str_replace('\/', '/', $url);
+		return $url;
 	}
 
 	// Executing the view function

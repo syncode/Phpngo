@@ -8,6 +8,7 @@
 	// This will be used to load the enviroment based settings file
 	define('ENVIRONMENT', 'development');
 	
+	define('TEMPLATES_DIR', PH_PATH . 'templates/');
 
 	// Media
 	define('MEDIA_URL', 'media/');
