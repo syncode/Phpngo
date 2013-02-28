@@ -7,15 +7,35 @@ class Main {
 
 	// The core init function, searching for fitting view in urls array and executing it's view
 	public static function init(){
-		global $URLS;
 
-		$uri = str_replace(BASE_URI, '', $_SERVER['REQUEST_URI']);
+		global $URLS;
+		$uri = str_replace( BASE_URI, '', $_SERVER['REQUEST_URI'] );
 
 		// URLS configuration
-		foreach ($URLS as $regex => $view){
+		foreach ($URLS as $regex => $action){
 			if( preg_match($regex, $uri) ){
-				if( HTML_COMPRESS ) ob_start('Main::html_compress');
-				return self::get_view($view, $uri);
+
+				if( $action && is_array( $action ) && $action[0] == 'http_redirect' ){
+					// HTTP redirect
+					if( !headers_sent() && $action[1] ){
+						header('Location: ' . $action[1] );
+						exit;
+					}
+				}else if( $action && is_array( $action ) && $action[0] == 'view_redirect' ){
+					// Redirect by providing a view name
+					$url = (string)array_search($action[1], $URLS);
+					$url = str_replace('/^', BASE_URL, $url);
+
+					if( !headers_sent() && $url){
+						header('Location: ' . $url );
+						exit;
+					}
+				}else if( $action ){
+					// Loading view
+					if( HTML_COMPRESS ) ob_start('Main::html_compress');
+					return self::load_view( $action, $uri );
+				}
+
 			}
 		}
 
@@ -56,7 +76,7 @@ class Main {
 		}
 
 		// 404
-		return self::get_view( ERROR_404_VIEW, $uri );
+		return self::load_view( ERROR_404_VIEW, $uri );
 	}
 
 	public static function html_compress( $content ){
@@ -64,7 +84,7 @@ class Main {
 	}
 
 	// Executing the view function
-	private static function get_view($view, $uri){
+	private static function load_view($view, $uri){
 		return (function_exists( $view )) ? call_user_func( $view , explode('/', $uri) ) : call_user_func( ERROR_404_VIEW , explode('/', $uri) );
 	}
 
