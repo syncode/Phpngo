@@ -1,4 +1,23 @@
 	
+	window.Phpngo = window.Phpngo || {};
+
+	// History API
+	Phpngo.history = {
+		states: [],
+		popstate: function(event){
+			var state = event.state;
+
+			if((state === null) || (state === undefined)){
+				state = window.event.state;
+			}
+
+			if( state ){
+				console.log(state.index, Phpngo.history.states, Phpngo.history.states[ state.index ] );
+				Phpngo.history.states[ state.index ].element.trigger( Phpngo.history.states[ state.index ].action );
+			}
+		}
+	};
+	window.addEventListener('popstate', Phpngo.history.popstate );
 
 	// Content transitions
 	$.fn.transition = function( args ){
@@ -61,7 +80,9 @@
 				}else if( options.url ){
 
 					if( options.history && typeof history.pushState !== 'undefined' ){
-						history.pushState( options.data, options.title, options.url);
+						var index = Phpngo.history.states.length;
+						Phpngo.history.states[ index ] = { element: $element, action: options.action }
+						history.pushState( { index: index }, options.title, options.url);
 					}
 
 					$.ajax({
