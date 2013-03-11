@@ -13,15 +13,26 @@
 						$target: $target,
 						url: $this.attr('href'),
 						block: 'demo-content',
-						onBefore: function(){
-							$('#demo-menu li.active').removeClass('active');
-							$this.parents('li').addClass('active');
-							return true;
-						}
+						onBefore: Phpngo.demo.menuManager
 					};
 					$this.transition( params );
 			});
 
+		},
+		menuManager: function( url ){
+
+			// Clear the selected menu
+			$('#demo-menu li.active').removeClass('active');
+
+			// Select the new url
+			switch( url){
+				case '/':
+				break;
+				case '/demo/':
+				break;
+			}
+
+			return true;
 		}
 	};
 
