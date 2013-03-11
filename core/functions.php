@@ -35,7 +35,10 @@ function load( $media_type = 'CSS', $files = array() ){
 						?><script src="<?php echo $file; ?>"></script><?php
 					}
 				}else{
-					?><script src="<?php echo  JS_URL . $file; ?>"></script><?php
+					
+					$js_file = ( (strpos($file, 'http://') === false) && strpos($file, 'https://') === false ) 
+						?  JS_URL . $file : $file;
+					?><script src="<?php echo  $js_file; ?>"></script><?php
 				}
 			}
 

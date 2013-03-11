@@ -51,7 +51,11 @@
 				onBefore: function(){ return true; },
 				onSuccess: function( response ){ return true; },
 				onError: function( response ){ return false; },
-				onAfterUpdate: function( response ){}
+				onAfterUpdate: function( response ){
+					if (typeof console != "undefined") {
+					    console.log(response);
+					}
+				}
 
 			},
 			options = $.extend( false, defaults, args ), // User can change the settings.
