@@ -28,7 +28,7 @@ function render( $template, $context = array() ){
 	$lowest = ob_get_clean();
 	array_push($templates_hirarchy, $lowest);
 
-	if( $_REQUEST['is_ajax'] == 'true' && $_REQUEST['block']){
+	if( (isset($_REQUEST['is_ajax'])) && ($_REQUEST['is_ajax'] == 'true') && $_REQUEST['block']){
 		echo (string)$blocks[ $_REQUEST['block'] ];
 		exit;
 	}

@@ -15,7 +15,7 @@ function load( $media_type = 'CSS', $files = array() ){
 						?><link rel="stylesheet" href="<?php echo $file; ?>"><?php
 					}
 				}else{
-					?><link rel="stylesheet" href="<?php echo MEDIA_URL . CSS_URL . $file; ?>"><?php
+					?><link rel="stylesheet" href="<?php echo  CSS_URL . $file; ?>"><?php
 				}
 			}
 
@@ -35,7 +35,7 @@ function load( $media_type = 'CSS', $files = array() ){
 						?><script src="<?php echo $file; ?>"></script><?php
 					}
 				}else{
-					?><script src="<?php echo MEDIA_URL . JS_URL . $file; ?>"></script><?php
+					?><script src="<?php echo  JS_URL . $file; ?>"></script><?php
 				}
 			}
 
