@@ -114,7 +114,9 @@ class Main {
 		$buffer = '';
 		$cached_string = str_replace($cached_string_prefix, '', str_replace($cached_string_postfix, '', $uri));
 		$files = ( JS_ENCODE ) ? explode('+', utf8_decode( base64_decode( $cached_string ) ) ) : explode('+', utf8_decode( $cached_string ) ) ;
-		$cached_string = base64_encode( $cached_string );
+		//$cached_string = base64_encode( $cached_string );
+
+		// die("<pre>". $cache_dir . $cached_string . $ext ."</pre>");
 
 		if( $cached_string && file_exists( $cache_dir . $cached_string . $ext )){
 			// Load cached file
