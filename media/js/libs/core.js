@@ -35,7 +35,7 @@
 				prevent: true,				// Prevent defaults
 
 				// Transition
-				animation: 'push',			// "push", "clear", "none", "fade"
+				animation: 'push',			// "push", "clear", "none", "fade", "back-return"
 				duration: 1000,				// (in ms) Total duration of the animation
 				loadingClass: '',			// The calss name that will be appended durring the loading time
 				loadingHTML: '',			// The HTML content of the element durring the loading time
@@ -53,6 +53,7 @@
 				// Hard Coded
 				HTML: '',
 				rtl: false,
+				loaderImgPath: '/phpngo/media/images/loader.gif',
 
 				// Events: onBefore > (onSuccess | onError) > onAfterUpdate
 				onBefore: function(){ return true; },
@@ -67,64 +68,166 @@
 			options = $.extend( false, defaults, args ), // User can change the settings.
 
 			do_animation = {
-				//wrapping the content & adding css
-				new_element: function(response){
-					//get traget position
-					var el_position = $target.offset(),
-						active_direction = 'left:'+el_position.left+'px',
-						right_position = 0;
+				switch_elements: function(response){
+					var stage = 'start';
+					//wrap it
+					$target.wrapInner('<div id="phpngo-element-wrap"></div>');
+					//add class to parent
+					$target.addClass('phpngo-element-parent');
+					//add style
+					var style = '<style id="phpngo-element-style">'+do_animation.add_new_style(options.animation)+'</style>';
+					$target.append(style);
+					//adding loader layer
+					functions.add_loader();
+					//hide page's scrollbar
+					functions.disable_scrollbar();
 
-					if(options.rtl){
-						right_position = window.width() - el_position.left - $('body').width();
-						active_direction = 'right:'+right_position+'px',
+					switch(options.animation)
+					{
+					case 'push':
+					  var new_element = functions.add_new_element(response);
+					  $('#phpngo-element-wrap').wrap('<div id="phpngo-elements-push"></div>');
+					  $('#phpngo-elements-push').prepend(new_element);
+					  //adjust the div's height according to the new element's height
+					  functions.adjust_element_height('phpngo-new-element');
+					  setTimeout(function(){
+					  	$('#phpngo-elements-push').addClass('active');
+					  }, 10);
+
+					  $('#phpngo-elements-push').on("transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd", function(){
+					  	if(!options.cache){
+						  	$('#phpngo-element-wrap').remove();
+							functions.remove_phpngo_wrapper('phpngo-new-element');
+							functions.remove_phpngo_wrapper('phpngo-elements-push');
+						  	$('#phpngo-element-style').remove();
+						  	$target.removeClass('phpngo-element-parent');
+					  	}
+					  });
+					  break;
+					case 'push-back':
+					  var new_element = functions.add_new_element(response);
+					  $('#phpngo-element-wrap').wrap('<div id="phpngo-elements-push"></div>');
+					  $('#phpngo-elements-push').prepend(new_element);
+					  //adjust the div's height according to the new element's height
+					  functions.adjust_element_height('phpngo-new-element');
+					  setTimeout(function(){
+					  	$('#phpngo-elements-push').addClass('active');
+					  }, 10);
+
+					  $('#phpngo-elements-push').on("transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd", function(){
+					  	if(!options.cache){
+						  	$('#phpngo-element-wrap').remove();
+							functions.remove_phpngo_wrapper('phpngo-new-element');
+							functions.remove_phpngo_wrapper('phpngo-elements-push');
+						  	$('#phpngo-element-style').remove();
+						  	$target.removeClass('phpngo-element-parent');
+					  	}
+					  });
+					  break;
+					case 'back-return':
+						//when transition finishes - add the new content
+						$('#phpngo-element-wrap').on("transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd", function(){
+							if(stage == 'start'){
+								stage = 'back';
+								$(this).html(response);
+							    //adjust the div's height according to the new element's height
+							    functions.adjust_element_height('phpngo-element-wrap');
+								//add style
+								var style = do_animation.add_new_style(options.animation+'-back');
+								$('#phpngo-element-style').html(style);
+							}else{
+								//remove wrapper & style
+								functions.remove_phpngo_wrapper('phpngo-element-wrap');
+								$target.removeClass('phpngo-element-parent');
+								$('#phpngo-element-style').remove();
+							}
+						});
+					  break;
 					}
-
-					//creating the transition's css
-					var transition_css_in = functions.create_transition_css(options.animation, el_position.top, el_position.left, right_position);
-
-					return  '<div id="transition-inner-wrapper-in">'+response+'</div>'+
-							'<style id="transition-inner-style">'+
-								'#transition-inner-wrapper-in{'+transition_css_in+'}'+
-								'#transition-inner-wrapper-in.active{'+active_direction+'}'+
-							'</style>';
+					//remove loader layer
+					functions.remove_loader();
+					//check if page has scrollbar
+					functions.enable_scrollbar();
 				},
-				current_html: function(){
-					var current_html = $target.html(),
-						el_position = $target.offset(),
-						transition_css_out = functions.create_transition_css(animation+'-out', el_position.top, el_position.left);
+				add_new_style: function(animation){
+					//mesure
+					var el_width = $target.outerWidth(),
+						el_height = $target.outerHeight(),
+						duration = parseInt(options.duration)/1000,
+						extra_padding_movement = 100;
 
-					return '<div id="transition-inner-wrapper-out">'+current_html+'</div>'+
-						   '<style id="transition-out-style">'+
-						   '#transition-inner-wrapper-out{'+transition_css_out+'}'+
-						   '#transition-inner-wrapper-out.active{left: 150%;}'+
-						   '</style>';
-				},
-				do_switch: function(response, cache){
-					//switch between old & new html
-					$target.html(response);
-					$('#transition-inner-wrapper-in').remove();
-					$('#transition-inner-style').remove();
-					$('#transition-inner-wrapper-out').toggleClass('active');
-					setTimeout(function(){
-						$('#transition-inner-wrapper-out').remove();
-						if(!cache){
-							$('#transition-out-style').remove();
-						}
-					},700);
+					switch(animation)
+					{
+					case 'push':
+					  var direction = (!options.rtl) ? 'right' : 'left',
+					  	  initial_position = '',
+					  	  move_to = '';
+
+					  if(!options.rtl){
+					  		initial_position = 'margin-left:0;';
+					  		move_to = 'margin-left:-'+el_width+'px';
+					  }else{
+					  		initial_position = 'margin-left:-'+el_width+'px;';
+					  		move_to = 'margin-left:0';
+					  }
+
+					  var css = '.phpngo-element-parent{overflow:hidden;width:'+(el_width)+'px;height:'+el_height+'px;}';
+					  	  css += '#phpngo-elements-push{width:'+(el_width*2)+'px;height:'+el_height+'px;'+initial_position;
+					  	  css +=  functions.get_browser_prefix()+"transition: margin-left "+duration+"s ease;}";
+					  	  css += '#phpngo-elements-push.active{'+move_to+'}';
+					  	  css += '#phpngo-element-wrap,#phpngo-new-element';
+					  	  css += '{width:'+el_width+'px;float:'+direction+';}';
+
+					  	  return css;
+					  break;
+					case 'push-back':
+					//for back clicking
+					  var direction = (!options.rtl) ? 'right' : 'left',
+					  	  initial_position = '',
+					  	  move_to = '';
+
+					  if(!options.rtl){
+					  		initial_position = 'margin-left:0;';
+					  		move_to = 'margin-left:-'+el_width+'px';
+					  }else{
+					  		initial_position = 'margin-left:-'+el_width+'px;';
+					  		move_to = 'margin-left:0';
+					  }
+
+					  var css = '.phpngo-element-parent{overflow:hidden;width:'+(el_width)+'px;height:'+el_height+'px;}';
+					  	  css += '#phpngo-elements-push{width:'+(el_width*2)+'px;height:'+el_height+'px;margin-'+direction+':-'+el_width+'px;';
+					  	  css +=  functions.get_browser_prefix()+"transition: margin-"+direction+" "+duration+"s ease;}";
+					  	  css += '#phpngo-elements-push.active{margin-'+direction+':0}';
+					  	  css += '#phpngo-element-wrap,#phpngo-new-element';
+					  	  css += '{width:'+el_width+'px;float:left;}';
+
+					  	  return css;
+					  break;
+					case 'back-return':
+						var push_to = (parseInt(el_width)+extra_padding_movement)+'px';
+						var direction = (!options.rtl) ? 'left' : 'right';
+						
+					  var parent_css = '.phpngo-element-parent{overflow:hidden;width:'+el_width+'px;height:'+el_height+'px;}',
+					  	  element_css = '#phpngo-element-wrap{width:'+el_width+'px;margin-'+direction+':-'+push_to+';'+functions.get_browser_prefix()+'transition: margin-'+direction+' '+duration+'s linear;}';
+
+					  	  return parent_css+element_css;
+					  break;
+					case 'back-return-back':
+						var push_to = (parseInt(el_width)+extra_padding_movement)+'px';
+						var direction = (!options.rtl) ? 'left' : 'right';
+						
+					  var parent_css = '.phpngo-element-parent{overflow:hidden;width:'+el_width+'px;height:'+el_height+'px;}',
+					  	  element_css = '#phpngo-element-wrap{width:'+el_width+'px;margin-'+direction+':0;'+functions.get_browser_prefix()+'transition: margin-'+direction+' '+duration+'s ease;}';
+
+					  	  return parent_css+element_css;
+					  break;
+					}
 				},
 				init: function(response){
 					$target = options.$target;
-					//adding the new element to the dom
-					$('body').append(do_animation.new_element(response));
 					setTimeout(function(){
-						//adding the transition class
-						$('#transition-inner-wrapper-in').toggleClass('active');
-						//wrap current element html & position it
-						$('body').append(do_animation.current_html());
-					},200);
-					setTimeout(function(){
-						do_animation.do_switch(response, options.cache);
-					},2300);
+						do_animation.switch_elements(response);
+					}, options.duration);
 				}
 			};
 
@@ -142,25 +245,6 @@
 					    console.log('handling error');
 					}
 				},
-				create_transition_css: function(transition, top, left, right){
-					var style = '';
-
-					switch(transition)
-					{
-					case 'push':
-					  if(options.rtl){
-					  	
-					  }
-					  style = "left:-50%;position:absolute;top:"+top+"px;";
-					  style += functions.get_browser_prefix()+"transition: left 2s ease;";
-					  break;
-					case 'push-out':
-					  style = "left:"+left+"px;position:absolute;top:"+top+"px;";
-					  style += functions.get_browser_prefix()+"transition: left 2s ease;"
-					  break;
-					}
-					return style;
-				},
 				get_browser_prefix: function(){
 					var browser = Phpngo.params.browser;
 					if(browser.indexOf("firefox") > -1){return '-moz-';}
@@ -170,6 +254,47 @@
 					if(browser.indexOf("msie") > -1){return '-ms-';}
 
 					return '';
+				},
+				remove_phpngo_wrapper: function(el_id){
+					var child = $('#'+el_id).children(":first");
+					child.unwrap('<div id="'+el_id+'"></div>');
+				},
+				add_new_element: function(response){
+					return '<div id="phpngo-new-element">'+response+'</div>';
+				},
+				adjust_element_height: function(element){
+					var height = $('#'+element).outerHeight()+'px';
+					$target.outerHeight(height);
+				},
+				disable_scrollbar: function(){
+					$('body').css('overflow', 'hidden');
+				},
+				enable_scrollbar: function(){
+					var has_scrollbar = functions.check_for_scrollbar(),
+						attr = '';
+					if(has_scrollbar){
+						attr = 'auto';
+					}else{
+						attr = 'visible';
+					}
+					setTimeout(function(){
+						$('body').css('overflow', attr);
+					}, 10);
+				},
+				check_for_scrollbar: function(){
+					if ($(document).height() > $(window).height()) { 
+						return true;
+					}else{
+						return false;
+					}
+				},
+				add_loader: function(){
+					var layer_css = 'height:100%;width:100%;z-index:1000;background:#000000;opacity:0.4;padding-top:25%;position:absolute;top:0;left:0;',
+						black_layer = '<div class="phpngo-transition-layer" style="position:relative;text-align:center;"><div style="'+layer_css+'"></div><img style="position:absolute;padding-top:25%;z-index:1001" src="'+options.loaderImgPath+'" /></div>';
+					$target.prepend(black_layer);
+				},
+				remove_loader: function(){
+					$('.phpngo-transition-layer').remove();
 				}
 			};
 
