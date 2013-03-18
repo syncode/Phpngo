@@ -14,8 +14,8 @@
 						url: $this.attr('href'),
 						block: 'demo-content',
 						onBefore: function(){
-							$('#demo-menu li.active').removeClass('active');
-							$this.parents('li').addClass('active');
+							/*$('#demo-menu li.active').removeClass('active');
+							$this.parents('li').addClass('active');*/
 							return true;
 						}
 					};

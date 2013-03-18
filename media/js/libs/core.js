@@ -2,7 +2,9 @@
 	window.Phpngo = window.Phpngo || {};
 
 	Phpngo.params = {
-		browser: navigator.userAgent.toLowerCase()
+		browser: navigator.userAgent.toLowerCase(),
+		cache_array: new Array(),
+		is_animating: false
 	};
 
 	Phpngo.compatibility = {
@@ -24,7 +26,7 @@
 	};
 
 
-	var browser_has_transitions = Phpngo.compatibility.has_transitions();
+	var browser_has_transitions = Phpngo.compatibility.has_transitions();;
 
 	// History API
 	Phpngo.history = {
@@ -42,7 +44,7 @@
 			}
 		}
 	};
-	
+
 	if(window.addEventListener){
 		window.addEventListener('popstate', Phpngo.history.popstate );
 
@@ -56,7 +58,6 @@
 
 		var self = this,
 			$element = $(this),
-			functions_queue = '',
 			defaults = {
 
 				// Event
@@ -64,7 +65,7 @@
 				prevent: true,				// Prevent defaults
 
 				// Transition
-				animation: 'back-return',			// "push", "clear", "none", "fade", "back-return"
+				animation: 'push',			// "push", "clear", "none", "fade", "back-return"
 				duration: 1000,				// (in ms) Total duration of the animation
 				loadingClass: 'phpngo-transition-layer',			// The calss name that will be appended durring the loading time
 				loadingHTML: '',			// The HTML content of the element durring the loading time
@@ -72,16 +73,18 @@
 
 				// Ajax
 				history: true,
-				cache: false,
+				cache: true,
 				title: '',
 				url: '',
 				data: {},
 				type: 'POST',
 				block: '',
+				menu_element: '#demo-menu',
+				menu_item: 'li',
 
 				// Hard Coded
 				HTML: '',
-				rtl: true,
+				rtl: false,
 				loaderImgPath: '/phpngo/media/images/loader.gif',
 
 				// Events: onBefore > (onSuccess | onError) > onAfterUpdate
@@ -91,10 +94,12 @@
 				},
 				onError: function( response ){ return false; },
 				onAfterUpdate: function( response ){},
-				onTransition: function(){ 
-					functions.do_animation();
+				onTransition: function(animation_type){ 
+					functions.do_added_action();
+					functions.do_animation(animation_type);
 					if(browser_has_transitions){
-						functions.animation_finish();
+						//animation_finish will be called as a callback to the animate func
+						functions.animation_finish(animation_type);
 					}
 				},
 				onAfter: function( response ){}
@@ -150,11 +155,11 @@
 						  if(!options.rtl){
 					  		var margin_left = '-'+el_width,
 					  			margin_left_active = 0,
-					  			direction = 'right';
+					  			direction = 'left';
 						  }else{
 					  		var margin_left = 0,
 					  			margin_left_active = '-'+el_width,
-					  			direction = 'left';
+					  			direction = 'right';
 						  }
 
 						  var style = new Array();
@@ -224,10 +229,10 @@
 					  break;
 					}
 				},
-				init: function(response){
+				init: function(response, animation_type){
 					$target = options.$target;
 					//update dom
-					functions.update_dom(response);
+					functions.update_dom(response, animation_type);
 					//remove loader layer
 					functions.remove_loader();
 					//check if page has scrollbar
@@ -237,14 +242,35 @@
 
 			functions = {
 				update_content: function( content ){
+					var animation_type = options.animation;
+
+					if(options.cache){
+						var post_url = this.url;
+
+						if(post_url && post_url !== 'undefined'){
+							//creating the cell according to the requested url
+							var cache_element = { 'url': post_url, 'content': content, 'animation_type': animation_type }
+							Phpngo.params.cache_array.push(cache_element);
+						}else{
+							animation_type = content.animation_type;
+							if(animation_type.indexOf('-back') == -1){
+								animation_type += '-back';
+							}else{
+								animation_type = animation_type.replace('-back', '');
+							}
+							functions.update_cached_value(content.url, 'animation_type', animation_type);
+							content = content.content;
+						}
+					}
+					
 					if( ($.isFunction( options.onSuccess ) && options.onSuccess( content, self )) ){
-						handle_dom.init(content);
+						handle_dom.init(content, animation_type);
 
 						if( ($.isFunction( options.onAfterUpdate ) && options.onAfterUpdate( content, self )) ){
 							options.onAfterUpdate();
 						}
 
-						if( ($.isFunction( options.onTransition ) && options.onTransition( content, self )) ){
+						if( ($.isFunction( options.onTransition ) && options.onTransition( animation_type )) ){
 							options.onTransition();
 						}
 
@@ -253,39 +279,30 @@
 						}
 					}
 				},
-				update_dom: function(response){
+				update_dom: function(response, animation_type){
 					//wrap it
 					$target.wrapInner('<div id="phpngo-element-wrap"></div>');
 					//add class to parent
 					$target.addClass('phpngo-element-parent');
 					//add style
-					var style = '<style id="phpngo-element-style">'+handle_dom.add_new_style(options.animation)+'</style>';
+					var style = '<style id="phpngo-element-style">'+handle_dom.add_new_style(animation_type)+'</style>';
 					$target.append(style);
 					//adding loader layer
 					functions.add_loader();
 					//hide page's scrollbar
 					functions.disable_scrollbar();
 
-					switch(options.animation)
+					switch(animation_type)
 					{
-					case 'push':
+					case 'push': case 'push-back':
 					  var new_element = functions.add_new_element(response);
 					  $('#phpngo-element-wrap').wrap('<div id="phpngo-elements-push"></div>');
 					  $('#phpngo-elements-push').prepend(new_element);
 					  //adjust the div's height according to the new element's height
-					  //functions.adjust_element_height('phpngo-new-element');
+					  functions.adjust_element_height('phpngo-new-element');
 
 					  break;
-					case 'push-back':
-					  var new_element = functions.add_new_element(response);
-					  $('#phpngo-element-wrap').wrap('<div id="phpngo-elements-push"></div>');
-					  $('#phpngo-elements-push').prepend(new_element);
-					  //adjust the div's height according to the new element's height
-					  //functions.adjust_element_height('phpngo-new-element');
-
-					  break;
-					case 'back-return':
-
+					case 'back-return': case 'back-return-back':
 
 						if(!browser_has_transitions){
 							//ie
@@ -299,12 +316,14 @@
 								margin = '-'+margin;
 							}
 							
+							Phpngo.params.is_animating = true;
 							//going in
 							$wrap.stop().animate({
 								marginLeft: margin
 							},options.duration, 'linear', function(){
 								//add new content
 								$('#phpngo-element-wrap').html(response);
+					  			functions.adjust_element_height('phpngo-element-wrap');
 								
 								setTimeout(function(){
 									$wrap.stop().animate({
@@ -314,6 +333,7 @@
 										functions.remove_phpngo_wrapper('phpngo-element-wrap');
 										$target.removeClass('phpngo-element-parent');
 										$('#phpngo-element-style').remove();
+										Phpngo.params.is_animating = false;
 									});
 								}, 10);
 							});
@@ -339,32 +359,30 @@
 							});
 						}
 
-						functions_queue = $('#phpngo-elements-push').queue("fx");
 						
 					  break;
 					}
 				},
-				do_animation: function(){
-					switch(options.animation){
+				do_animation: function(animation_type){
+					switch(animation_type){
 					case 'push':
-						
 						if(!browser_has_transitions){
 							//ie
 							var $wrap = $('#phpngo-elements-push'),
-								margin = ($wrap.outerWidth()/2)+'px';
+								margin = 0;
 
 							if(!options.rtl){
-								margin = '-'+margin;
+								margin = '-'+($wrap.outerWidth()/2)+'px';
 							}
 
+							Phpngo.params.is_animating = true;
 							$wrap.stop().animate({
 							    marginLeft: margin
-							}, options.duration, 'linear', functions.animation_finish);
+							}, options.duration, 'swing', functions.animation_finish(animation_type));
 						}else{
 				  			$('#phpngo-elements-push').addClass('active');
 						}
 
-						functions_queue = $('#phpngo-elements-push').queue("fx");
 
 					  break;
 					case 'push-back':
@@ -378,14 +396,14 @@
 								margin = 0;
 							}
 
+							Phpngo.params.is_animating = true;
 							$wrap.stop().animate({
 							    marginLeft: margin
-							}, options.duration, 'linear', functions.animation_finish);
+							}, options.duration, 'swing', functions.animation_finish(animation_type));
 						}else{
 				  			$('#phpngo-elements-push').addClass('active');
 						}
 
-						functions_queue = $('#phpngo-elements-push').queue("fx");
 					  
 					  break;
 					case 'back-return':
@@ -393,72 +411,63 @@
 					  break;
 					}
 				},
-				animation_finish: function(){
-					switch(options.animation){
+				animation_finish: function(animation_type){
+					switch(animation_type){
 						case 'push':
-						
 						  if(!browser_has_transitions){
-						  	//checking if there's no animation in progress
-						  	if(functions_queue != 'inprogress'){
 						  		setTimeout(function(){
-							  		if(!options.cache){
-							  			
-									  	$('#phpngo-element-wrap').remove();
-										functions.remove_phpngo_wrapper('phpngo-new-element');
-										functions.remove_phpngo_wrapper('phpngo-elements-push');
-									  	$('#phpngo-element-style').remove();
-									  	$target.removeClass('phpngo-element-parent');
-								  	}
+								  	functions.kill_animation_leftovers(animation_type);
+						  			Phpngo.params.is_animating = false;
 								  }, parseInt(options.duration));
-						  	}
 						  }else{
 							  $('#phpngo-elements-push').on("transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd", function(){
-							  	if(!options.cache){
-								  	$('#phpngo-element-wrap').remove();
-									functions.remove_phpngo_wrapper('phpngo-new-element');
-									functions.remove_phpngo_wrapper('phpngo-elements-push');
-								  	$('#phpngo-element-style').remove();
-								  	$target.removeClass('phpngo-element-parent');
-							  	}
+							  	functions.kill_animation_leftovers(animation_type);
 							  });
 						  }
 
 						  break;
 						  case 'push-back':
 							  
-
-							  
 							  if(!browser_has_transitions){
-							  	//checking if there's no animation in progress
-							  	if(functions_queue != 'inprogress'){
-							  		setTimeout(function(){
-								  		if(!options.cache){
-								  			
-										  	$('#phpngo-element-wrap').remove();
-											functions.remove_phpngo_wrapper('phpngo-new-element');
-											functions.remove_phpngo_wrapper('phpngo-elements-push');
-										  	$('#phpngo-element-style').remove();
-										  	$target.removeClass('phpngo-element-parent');
-									  	}
-									  }, parseInt(options.duration));
-							  	}
+							  	setTimeout(function(){
+								  	functions.kill_animation_leftovers(animation_type);
+						  			Phpngo.params.is_animating = false;
+								  	}, parseInt(options.duration));
+									
 							  }else{
 
 								  $('#phpngo-elements-push').on("transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd", function(){
-								  	if(!options.cache){
-									  	$('#phpngo-element-wrap').remove();
-										functions.remove_phpngo_wrapper('phpngo-new-element');
-										functions.remove_phpngo_wrapper('phpngo-elements-push');
-									  	$('#phpngo-element-style').remove();
-									  	$target.removeClass('phpngo-element-parent');
-								  	}
+								  	functions.kill_animation_leftovers(animation_type);
 								  });
 							  }
 							  break;
 					}
 
 				},
+				kill_animation_leftovers: function(animation_type){
+					switch(animation_type){
+						case 'push': case 'push-back':
+						  	$('#phpngo-element-wrap').remove();
+							functions.remove_phpngo_wrapper('phpngo-new-element');
+							functions.remove_phpngo_wrapper('phpngo-elements-push');
+						  	$('#phpngo-element-style').remove();
+						  	$target.removeClass('phpngo-element-parent');
+						  	$('.disable-btn').removeClass('disable-btn');
+						  break;
+					}
+
+					return;
+				},
+				do_added_action: function(){
+					var menu_item = options.menu_element+' '+options.menu_item;
+					$(menu_item+'.active').removeClass('active');
+					if (typeof console != "undefined") {
+					    console.log($element.parents());
+					}
+					$element.parent(options.menu_item).addClass('active');
+				},
 				handle_error: function(){
+					functions.kill_animation_leftovers();
 					if (typeof console != "undefined") {
 					    console.log('handling error');
 					}
@@ -481,8 +490,12 @@
 					return '<div id="phpngo-new-element">'+response+'</div>';
 				},
 				adjust_element_height: function(element){
-					var height = $('#'+element).outerHeight()+'px';
-					$target.outerHeight(height);
+					var height = $('#'+element).outerHeight();
+					if(height < $target.height()){
+						return false;
+					}else{
+						$target.outerHeight(height+'px');
+					}
 				},
 				disable_scrollbar: function(){
 					$('body').css('overflow', 'hidden');
@@ -529,13 +542,13 @@
 					for(var elements in style){
 						out += elements+'{';
 						for(var k in style[elements]) {
-						   out += functions.css_line_build(k, style[elements][k]);
+						   out += functions.css_attr_build(k, style[elements][k]);
 						}
 						out += '}';
 					}
 					return out;
 				},
-				css_line_build: function(key, val){
+				css_attr_build: function(key, val){
 					var tags_with_prefixes = ['transition'],
 						out = key+':';
 
@@ -554,24 +567,75 @@
 					out += ';';
 
 					return out;
+				},
+				is_cached: function(url, key){
+					var cached_arr = Phpngo.params.cache_array,
+						is_cached = false;
+					for(var k in cached_arr) {
+						for(var c in cached_arr[k]){
+							if(c == 'url' && cached_arr[k][c] == url){
+								is_cached = true;
+								if(!key){
+									return cached_arr[k];
+								}
+							}
+							if((c == key) && is_cached){
+								return cached_arr[k][c];
+							}
+						}
+					}
+					return false;
+				},
+				update_cached_value: function(url, key, val){
+					var is_the_one = false;
+					for(var k in Phpngo.params.cache_array) {
+						for(var c in Phpngo.params.cache_array[k]){
+							if(c == 'url' && Phpngo.params.cache_array[k][c] == url){
+								is_the_one = true;
+							}
+							if((c == key) && is_the_one){
+								Phpngo.params.cache_array[k][c] = val;
+							}
+						}
+					}
+					return false;
 				}
 			};
 
 		$element.on( options.action, function(e){
 			if( ($.isFunction( options.onBefore ) && options.onBefore()) ){
+
+				var is_animating = Phpngo.params.is_animating,
+					link_clicked = e.target.href,
+					is_a_disabled = ($(this).hasClass('disable-btn')) ? true : false;
 				
 				if( options.prevent ){
 					e.preventDefault();
 				}
 
+				if( is_animating || is_a_disabled ){
+					return false;
+				}
+
+				//locking the button for future clicks untill the animation finishes
+				$(this).addClass('disable-btn');
+
 				if( options.HTML ){
 					functions.update_content( options.HTML );
 				}else if( options.url ){
-
 					if( options.history && typeof history.pushState !== 'undefined' ){
 						var index = Phpngo.history.states.length;
 						Phpngo.history.states[ index ] = { element: $element, action: options.action }
 						history.pushState( { index: index }, options.title, options.url);
+					}
+
+					if(options.cache){
+						//checking if the call has been cached already, if not do ajax
+						var cached_ver = functions.is_cached(options.url);
+						if(cached_ver != false){
+							functions.update_content(cached_ver);
+							return;
+						}
 					}
 
 					$.ajax({
