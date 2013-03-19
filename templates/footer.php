@@ -15,5 +15,18 @@
 			</div>
 		</div>
 	</footer>
+
+	<?php
+
+		// Scripts
+		load('js', array(
+			'libs/jquery.js',
+			'ui.min.js',
+			'general.min.js',
+			'libs/core.js',
+			'demo.js'
+		));
+
+	?>
 </body>
 </html>

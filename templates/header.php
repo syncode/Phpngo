@@ -11,7 +11,16 @@
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="black">
 	<meta name="format-detection" content="telephone=no">
+	<?php
 
+		// Styles
+		load('css', array(
+			'general.css',
+			'home.css',
+			'custom.css'
+		));
+
+	?>
 </head>
 <body>
 	<header>

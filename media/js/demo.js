@@ -7,15 +7,13 @@
 			// load content block using ajax
 			var $target = $('#content');
 
-			$('leyout a').each(function(){
+			$('.leyout a').each(function(){
 				var $this = $(this),
 					params = {
 						$target: $target,
 						url: $this.attr('href'),
-						block: 'demo-content',
+						block: 'content',
 						onBefore: function(){
-							/*$('#demo-menu li.active').removeClass('active');
-							$this.parents('li').addClass('active');*/
 							return true;
 						}
 					};
