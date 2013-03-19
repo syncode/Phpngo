@@ -6,7 +6,7 @@
 
 
 	// Base settings
-	define('BASE_URI', '/phpngo/');
+	define('BASE_URI', '/Projects/Sinapsa/Phpngo/');
 	define('BASE_URL', (strpos(strtolower($_SERVER['SERVER_PROTOCOL']),'https') === FALSE ? 'http://' : 'https://') . $_SERVER['HTTP_HOST'] . BASE_URI );
 
 
