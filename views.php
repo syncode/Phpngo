@@ -8,12 +8,42 @@
 	}
 
 	// Demos
-	function demo_history( $url_params ){
+	function solutions( $url_params ){
 		$context = array(
 			'header_selected_menu_item' => 'Demo',
 			'demo_selected_menu_item' => 'History API'
 		);
-		render('demo/history-api.php', $context);
+		render('solutions.php', $context);
+	}
+
+
+	// Demos
+	function case_studies( $url_params ){
+		$context = array(
+			'header_selected_menu_item' => 'Demo',
+			'demo_selected_menu_item' => 'History API'
+		);
+		render('case_studies.php', $context);
+	}
+
+
+	// Demos
+	function company( $url_params ){
+		$context = array(
+			'header_selected_menu_item' => 'Demo',
+			'demo_selected_menu_item' => 'History API'
+		);
+		render('company.php', $context);
+	}
+
+
+	// Demos
+	function labs( $url_params ){
+		$context = array(
+			'header_selected_menu_item' => 'Demo',
+			'demo_selected_menu_item' => 'History API'
+		);
+		render('labs.php', $context);
 	}
 
 	function demo_transitions( $url_params ){
@@ -30,4 +60,3 @@
 
 		echo 'ERROR:  cannont retrive >'.$requested_url.'< <br> wrong url';
 	}
-	

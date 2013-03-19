@@ -5,9 +5,9 @@
 		init: function(){
 
 			// load content block using ajax
-			var $target = $('#demo-content-block');
+			var $target = $('#content');
 
-			$('#demo-menu li a').each(function(){
+			$('leyout a').each(function(){
 				var $this = $(this),
 					params = {
 						$target: $target,

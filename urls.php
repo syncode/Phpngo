@@ -7,8 +7,10 @@
 		'/^reverse/' => reverse('demo'),
 		'/^redirect/' => redirect('http://www.google.com'),
 		
-		'/^demo\/transacions/' => 'demo_transitions',
-		'/^demo/' => 'demo_history',
-		'/^$/' => 'index',
+		'/^solutions/' => 'solutions',
+		'/^case-studies/' => 'case_studies',
+		'/^company/' => 'company',
+		'/^labs/' => 'labs',
+		'/^$/' => 'index'
 
 	);
