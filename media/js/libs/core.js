@@ -242,6 +242,7 @@
 
 			functions = {
 				update_content: function( content ){
+					console.log(content);
 					var animation_type = options.animation;
 					if(options.cache){
 						var post_url = this.url;
@@ -263,6 +264,7 @@
 					}
 					
 					if( ($.isFunction( options.onSuccess ) && options.onSuccess( content, self )) ){
+					  	console.log("##",content);
 						handle_dom.init(content, animation_type);
 
 						if( ($.isFunction( options.onAfterUpdate ) && options.onAfterUpdate( content, self )) ){

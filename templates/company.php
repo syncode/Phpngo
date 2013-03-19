@@ -3,5 +3,5 @@
 ?>
 
 <?php block('main-content'); ?>
-דודתך הצולעת עושה עליה
+	<h1>company</h1>
 <?php endblock(); ?>

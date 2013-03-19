@@ -1,0 +1,167 @@
+@import "params.scss";
+
+/* Helper methods */
+@mixin white( $opacity: .5 ) {
+  background: rgba(255,255,255,$opacity);
+}
+
+@mixin calc($property, $expression) { 
+	#{$property}: -webkit-calc(#{$expression});
+	#{$property}: -moz-calc(#{$expression});
+	#{$property}: -ms-calc(#{$expression});
+	#{$property}: -o-calc(#{$expression});
+	#{$property}: calc(#{$expression});
+}
+
+@mixin animation($name, $speed: 2s, $iterations: infinite) {
+	-webkit-animation: $name $speed $iterations linear;
+	-moz-animation: $name $speed $iterations linear;
+	-ms-animation: $name $speed $iterations linear;
+	-o-animation: $name $speed $iterations linear;
+	animation: $name $speed $iterations linear;
+}
+
+@mixin transition($efx: opacity, $speed: .25s) {
+	-webkit-transition: #{$efx} $speed;
+	-moz-transition: #{$efx} $speed;
+	-ms-transition: #{$efx} $speed;
+	-o-transition: #{$efx} $speed;
+	transition: #{$efx} $speed;
+}
+
+@mixin image($url, $repeat: no-repeat, $position: 0 0, $size: "") {
+	background: url($images + $url) $repeat $position;
+
+	@if $size != "" {
+		background-size: $size;
+	}
+}
+
+@mixin ui($url, $repeat: no-repeat, $position: 0 0, $size: "") {
+	@include image('ui/' + $url, $repeat, $position, $size);
+}
+
+@mixin rotate($deg: -40deg, $origin-y: 0, $origin-x: 0) {
+	-webkit-transform: rotate($deg);
+	-moz-transform: rotate($deg);
+	transform: rotate($deg);
+	-webkit-transform-origin: $origin-y $origin-x;
+	-moz-transform-origin: $origin-y $origin-x;
+	transform-origin: $origin-y $origin-x;
+}
+
+@mixin safe-font-size($size: "small") {
+
+	// Safe font sizes:
+	// 
+	// microb  - 9px
+	// tiny    - 11px
+	// small   - 12px * default
+	// normal  - 15px
+	// title   - 18px
+	// big     - 28px
+	// bigger  - 31px
+	// large   - 42px
+	// extream - 48px
+	//
+	// Those sizes are displayed well on Windows / IE
+
+	@if $size == "microb" {
+		font-size: 9px;
+	} @else if $size == "tiny" {
+		font-size: 11px;
+	} @else if $size == "normal" {
+		font-size: 15px;
+	} @else if $size == "title" {
+		font-size: 18px;
+	} @else if $size == "big" {
+		font-size: 28px;
+	} @else if $size == "bigger" {
+		font-size: 31px;
+	} @else if $size == "large" {
+		font-size: 48px;
+	} @else if $size == "gigantic" {
+		font-size: 48px;
+	} @else if $size == "extream" {
+		font-size: 56px;
+	} @else {
+		font-size: 12px;
+	}
+}
+
+@mixin vertical-gradient($top, $bottom, $top-pos: 0%, $bottom-pos: 100%) {
+	background-image: -webkit-linear-gradient(top, $top $top-pos, $bottom $bottom-pos);
+	background-image: -moz-linear-gradient(top, $top $top-pos, $bottom $bottom-pos);
+	background-image: -ms-linear-gradient(top, $top $top-pos, $bottom $bottom-pos);
+	background-image: -o-linear-gradient(top, $top $top-pos, $bottom $bottom-pos);
+	background-image: linear-gradient(to top, $top $top-pos, $bottom $bottom-pos);
+}
+
+@mixin efx-glosy-edge( $size: 300px, $opacity: .2, $align: right ) {
+	background-image: -webkit-linear-gradient(45deg, transparent 50%, rgba(255,255,255,$opacity) 50%);
+	background-image: -moz-linear-gradient(45deg, transparent 50%, rgba(255,255,255,$opacity) 50%);
+	background-image: -ms-linear-gradient(45deg, transparent 50%, rgba(255,255,255,$opacity) 50%);
+	background-image: linear-graient(45deg, transparent 50%, rgba(255,255,255,$opacity) 50%);
+	background-size: $size $size;
+	background-repeat: no-repeat;
+	background-position-x: $align;
+}
+
+@mixin efx-glosy-bar( $size: 600px, $opacity: .2, $align: left ) {
+	background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, $opacity) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, $opacity) 50%, rgba(255, 255, 255, $opacity) 75%, transparent 75%, transparent);
+	background-image: -moz-linear-gradient(45deg, rgba(255, 255, 255, $opacity) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, $opacity) 50%, rgba(255, 255, 255, $opacity) 75%, transparent 75%, transparent);
+	background-image: -ms-linear-gradient(45deg, rgba(255, 255, 255, $opacity) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, $opacity) 50%, rgba(255, 255, 255, $opacity) 75%, transparent 75%, transparent);
+	background-image: linear-graient(45deg, rgba(255, 255, 255, $opacity) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, $opacity) 50%, rgba(255, 255, 255, $opacity) 75%, transparent 75%, transparent);
+	background-size: $size $size;
+	background-repeat: no-repeat;
+	background-position-x: $align;
+}
+
+@mixin text-stroke( $color: #FFF ) {
+	text-shadow: 0 2px 0 $color, 2px 0 0 $color, -2px 0 0 $color, 0 -2px 0 $color, 2px 2px $color, -2px -2px 0 $color;
+}
+
+/* Mixes */
+@mixin reset {
+	padding: 0;
+	margin: 0;
+}
+
+@mixin section {
+	float: left;
+	clear: left;
+	width: 100%;
+}
+
+@mixin no-wrap {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+@mixin no-outline {
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+	-webkit-touch-callout: none;              /* disable callout, image save panel (popup) */
+	-webkit-tap-highlight-color: transparent; /* "turn off" link highlight */
+}
+
+@mixin not-selectable {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+@mixin box-sizing {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+@mixin background-texture {
+	@include vertical-gradient(#434955, #272933, 0%, 80%);
+
+	.leyout {
+		background: url($ui + "texture.png") repeat;
+	}
+}

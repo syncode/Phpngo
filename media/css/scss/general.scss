@@ -1,0 +1,488 @@
+@import "functions.scss";
+@import "fonts.scss";
+
+/* ================================== Page leyout =================================== */
+body {
+	@include reset;
+	border-top: 4px solid $green-prime;
+	background: #FFF url($ui + 'bg.png') repeat-x;
+	font-family: 'DroidSans', Arial;
+	color: $grey-text;
+	width: 100%;
+
+	-webkit-font-smoothing: antialiased;
+	-webkit-text-size-adjust: none;
+}
+
+::selection {
+	background: $green-light;
+	color: #FFF;
+	text-shadow: none;
+}
+::-moz-selection {
+	background: $green-light;
+	color: #FFF;
+	text-shadow: none;
+}
+
+/* Headlines */
+h1, h2, h3, h4, h5, h6 { @include reset; font-weight: normal; }
+h1 { @include safe-font-size("large"); color: $grey-text; }
+h2 { @include safe-font-size("bigger"); color: $grey-light; }
+h3 { @include safe-font-size("big"); color: $grey-text; }
+h4 { @include safe-font-size("title"); color: $grey-text; }
+h5 { @include safe-font-size("big"); color: $green-prime; }
+h6 { @include safe-font-size("title"); color: $green-prime; }
+
+
+/* Styles */
+p {}
+span.alt {}
+
+a {}
+a:hover {}
+a:active {}
+
+
+/* Header */
+header {
+	@include section;
+	border-top: 1px solid $green-dark;
+
+	.branding {
+		padding: 40px 0;
+
+		&:before {
+			content: "";
+			display: block;
+			background: url($ui + 'bg-efx.png') no-repeat;
+			width: calc(width, "100% + 65px" );
+			max-width: 812px;
+			height: 600px;
+			top: 5px;
+			margin-left: -65px;
+			opacity: .75;
+			position: absolute;
+			z-index: -1;
+		}
+
+		.logo {
+			display: block;
+			width: 236px;
+			height: 79px;
+			margin-left: 15px;
+			background: url($ui + 'sinapsa.png') no-repeat;
+			//-webkit-mask: -webkit-gradient(radial, 50 50, 35, 30 30, 0, from(#000), color-stop(0.5, rgba(0,0,0,0)), to(#000));
+
+			&:hover {
+				//-webkit-mask: -webkit-gradient(radial, 0 0, 230, 30 30, 287, from(#000), color-stop(0.5, rgba(0,0,0,0)), to(#000))
+			}
+		}
+	}
+	.menu {
+		@include not-selectable;
+
+		ul{ 
+			padding: 0;
+			margin: 0 auto;
+			list-style: none;
+		}
+	}
+}
+
+
+/* Main section */
+section#main {
+	@include section;
+}
+
+
+/* Footer */
+footer {
+	@include section;
+	background: $grey-background;
+	
+	h3{
+		@include text-stroke;
+		@include not-selectable;
+		color: $grey-light;
+		margin: -52px 0 32px 0;
+		height: 40px;
+	}
+	.efx {
+		@include efx-glosy-bar;
+		float: left;
+		width: 100%;
+		padding: 30px 0;
+		min-height: 300px;
+	}
+	.social {
+		float: right;
+		width: 200px;
+
+		a {
+			@include no-outline;
+			float: left;
+			width: 24px;
+			height: 25px;
+			margin-right: 2px;
+			background: url($ui + "sprite-social.png") no-repeat -374px -100px;
+
+			&.in {
+				background-position: 0 0;
+				span { background-position: 0 -26px; }
+			}
+			&.fb {
+				background-position: -25px 0;
+				span { background-position: -25px -26px; }
+			}
+			&.tw {
+				background-position: -50px 0;
+				span { background-position: -50px -26px; }
+			}
+			&.gp {
+				background-position: -75px 0;
+				span { background-position: -75px -26px; }
+			}
+			&.gh {
+				background-position: -100px 0;
+				span { background-position: -100px -26px; }
+			}
+
+			span {
+				@include transition;
+				display: block;
+				width: 24px;
+				height: 25px;
+				background: url($ui + "sprite-social.png") no-repeat -374px -100px;
+				opacity: 0;
+			}
+			&:hover span, &:active span {
+				opacity: 1;
+			}
+			&:last-child {
+				margin-right: 0;
+			}
+		}
+	}
+
+	&.fixed {
+		position: absolute;
+		bottom: 0;
+	}
+}
+
+/* =================================== Responsive =================================== */
+@media (max-width: 1050px) {
+	.leyout {
+		width: 95%;
+		margin: 0 auto;
+	}
+
+	body header .menu ul {
+		li{
+			@include calc(width, "(20%) - 4px" );
+			
+			a {
+				@include calc(width, "(100%) - 30px" );
+			}
+		}
+		&:before {
+			width: 2.5%;
+			left: -4px;
+		}
+
+		&:after {
+			width: 2.5%;
+		}
+	}
+}
+
+@media (min-width: 1050px) {
+	.leyout {
+		width: 1000px;
+		margin: 0 auto;
+	}
+}
+
+@media (max-width: 750px) {
+	// Mobile
+	body {
+		@include transition(margin,.4s);
+		overflow: hidden;
+
+		// Mobile menu
+		header {
+			.menu {
+				@include background-texture;
+				@include transition(right,.4s);
+				position: fixed;
+				right: 0;
+				top: 0;
+				width: 230px;
+				z-index: 1000;
+				display: none;
+
+				ul {
+					@include box-sizing;
+					padding: 80px 0 150px 0;
+					margin: 0;
+					width: 100%;
+					box-shadow:inset 6px 0 5px rgba(0,0,0,.5);
+					overflow-y: auto;
+					overflow-x: hidden;
+					-webkit-overflow-scrolling: touch;
+
+					li {
+						width: 100%;
+						padding: 0;
+						border-top: 1px solid rgba(0,0,0,.12);
+
+						a {
+							@include safe-font-size("title");
+							@include no-outline;
+							display: block;
+							width: 185px;
+							padding: 15px 20px 15px 25px;
+							border-top: 1px solid rgba(255,255,255,.07);
+							color: rgba(255,255,255,.75);
+							text-decoration: none;
+							text-shadow: 0 2px 0 #000;
+							outline: none;
+
+							.title {
+								width: 185px;
+							}
+							.desc {
+								display: none;
+							}
+							&:active {
+								@include vertical-gradient(#333,#111);
+								border-top: 1px solid rgba(255, 255, 255, .25);
+								box-shadow: inset 5px -4px 9px #000;
+							}
+						}
+
+						&:last-child {
+							border-bottom: 1px solid rgba(255,255,255,.07);
+
+							a {
+								border-bottom: 1px solid rgba(0,0,0,.12);
+							}
+						}
+						&:first-child:before {
+							content: "";
+							background: url($ui + 'sinapsa-white@2x.png') no-repeat;
+							background-size: 110px 36px;
+							display: block;
+							width: 110px;
+							height: 36px;
+							position: absolute;
+							top: 24px;
+							left: 24px;
+						}
+						&.desktop-only {
+							display: none;
+						}
+
+					}
+				}
+
+				&:before {
+					content: "";
+					border-top: 8px solid transparent;
+			 		border-bottom: 8px solid transparent;
+			 		border-right: 8px solid #22242A;
+			 		display: block;
+			 		position: absolute;
+			 		margin: 75px 0 0 -7px;
+				}
+
+				&:after {
+					content: "";
+					display: block;
+				}
+			}
+			.menu-overlay {
+				position: fixed;
+				width: 90px;
+				height: 500px;
+				top: 0;
+				left: 0;
+				z-index: 1001;
+			}
+			.menu-btn {
+				@include vertical-gradient(rgba(0,0,0,.1), rgba(0,0,0,.2));
+				@include not-selectable;
+				@include no-outline;
+				width: 35px;
+				height: 20px;
+				float: right;
+				margin: -48px 15px 0 0;
+				border: 1px solid rgba(0,0,0,.1);
+				border-radius: 5px;
+				box-shadow: inset 0 1px 0 rgba(255,255,255,.65), 0 1px 0 rgba(0,0,0,.4);
+				padding: 10px;
+
+				span {
+					display: block;
+					width: 20px;
+					height: 3px;
+					margin: 3px auto;
+					background-color: #FFF;
+					border-radius: 3px;
+					box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+				}
+
+				&:active {
+					@include vertical-gradient(rgba(0,0,0,.3), rgba(0,0,0,.6));
+				}
+			}
+			.branding .logo {
+				background: url($ui + 'sinapsa@2x.png') no-repeat;
+				background-size: 188px 61px;
+				width: 188px;
+				height: 61px;
+			}
+		}
+		&.state-default {
+			margin: 0;
+
+			header {
+				.menu {
+					right: -240px;
+				}
+				.menu-overlay {
+					display: none;
+				}
+			}
+		}
+		&.state-menu {
+			margin: 0 0 0 -230px;
+
+			header {
+				.menu {
+					right: 0;
+				}
+				.menu-overlay {
+					display: block;
+				}
+			}
+		}
+
+		// Mobile footer
+		footer {
+			.social {
+				width: 161px;
+				margin: 0 auto;
+				float: none;
+
+				h3 {
+					display: none;
+				}
+				a {
+					margin-right: 10px;
+				}
+			}
+		}
+	}
+}
+
+@media (min-width: 750px) {
+	// Desktop
+	header {
+		.menu {
+			ul{ 
+				li {
+					float: left;
+					margin-right: 4px;
+
+					a {
+						@include no-outline;
+						@include white;
+						display: block;
+						width: 166px;
+						height: 40px;
+						padding: 15px;
+						
+						text-decoration: none;
+
+						&:hover {
+							@include white(.75);
+							@include efx-glosy-edge( 100px, 1 );
+							box-shadow: 0 0 3px rgba(0,0,0,.1);
+						}
+
+						.title {
+							@include safe-font-size("title");
+							@include no-wrap;
+							color: $grey-text;
+							display: block;
+						}
+						.desc {
+							@include safe-font-size();
+							@include no-wrap;
+							color: $grey-light-text;
+							display: block;
+						}
+					}
+
+					&.selected a, &.selected a:hover {
+						background: #FFF;
+						box-shadow: 0 0 5px rgba(0,0,0,.15);
+					}
+					&.mobile-only {
+						display: none;
+					}
+				}
+
+				&:before {
+					@include white();
+					@include calc(width, "((100% - 1000px) / 2) - 4px" );
+					content: "";
+					height: 70px;
+					position: absolute;
+					z-index: -1;
+					left: 0;
+				}
+
+				&:after {
+					@include white();
+					@include calc(width, "(100% - 1000px) / 2" );
+					content: "";
+					height: 70px;
+					position: absolute;
+					z-index: -1;
+					right: 0;
+				}
+			}
+		}
+	}
+}
+
+/* ===================================== Retina ===================================== */
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5) {
+	body {
+		border-top: 4px solid $green-prime-mobile;
+	}
+
+	header {
+		border-top: 1px solid $green-prime;
+		.branding {
+			.logo {
+				background: url($ui + 'sinapsa@2x.png') no-repeat;
+				background-size: 236px 79px;
+			}
+			&:before {
+				max-height: 475px;
+			}
+		}
+	}
+
+	footer {
+		.social a, .social a span {
+			background: url($ui + 'sprite-social@2x.png') no-repeat;
+			background-size: 124px 51px;
+		}
+	}
+}

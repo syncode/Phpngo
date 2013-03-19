@@ -5,17 +5,18 @@
 		init: function(){
 
 			// load content block using ajax
-			var $target = $('#content');
+			var $target = $('#stage');
 
 			$('.leyout a').each(function(){
 				var $this = $(this),
 					params = {
 						$target: $target,
 						url: $this.attr('href'),
-						block: 'content',
-						onBefore: function(){
-							return true;
-						}
+						block: 'main-content',
+						// onBefore: function(){
+						// 	return true;
+						// },
+						history: false
 					};
 					$this.transition( params );
 			});

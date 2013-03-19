@@ -17,7 +17,8 @@
 		load('css', array(
 			'general.css',
 			'home.css',
-			'custom.css'
+			'custom.css',
+			'libs/bootstrap.min.css'
 		));
 
 	?>
