@@ -1,4 +1,4 @@
-	
+
 	window.Phpngo = window.Phpngo || {};
 
 	Phpngo.params = {
@@ -243,7 +243,6 @@
 			functions = {
 				update_content: function( content ){
 					var animation_type = options.animation;
-					console.log(this.url);
 					if(options.cache){
 						var post_url = this.url;
 
@@ -462,7 +461,7 @@
 					var menu_item = options.menu_element+' '+options.menu_item;
 					$(menu_item+'.active').removeClass('active');
 					if (typeof console != "undefined") {
-					    console.log($element.parents());
+					    // console.log($element.parents());
 					}
 					$element.parent(options.menu_item).addClass('active');
 				},
