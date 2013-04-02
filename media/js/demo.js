@@ -1,28 +1,28 @@
 
-	window.Phpngo = window.Phpngo || {};
+	// window.Phpngo = window.Phpngo || {};
 
-	Phpngo.demo = {
-		init: function(){
+	// Phpngo.demo = {
+	// 	init: function(){
 
-			// load content block using ajax
-			var $target = $('#demo-content-block');
+	// 		// load content block using ajax
+	// 		var $target = $('#demo-content-block');
 
-			$('#demo-menu li a').each(function(){
-				var $this = $(this),
-					params = {
-						$target: $target,
-						url: $this.attr('href'),
-						block: 'demo-content',
-						onBefore: function(){
-							/*$('#demo-menu li.active').removeClass('active');
-							$this.parents('li').addClass('active');*/
-							return true;
-						}
-					};
-					$this.transition( params );
-			});
+	// 		$('#demo-menu li a').each(function(){
+	// 			var $this = $(this),
+	// 				params = {
+	// 					$target: $target,
+	// 					url: $this.attr('href'),
+	// 					block: 'demo-content',
+	// 					onBefore: function(){
+	// 						/*$('#demo-menu li.active').removeClass('active');
+	// 						$this.parents('li').addClass('active');*/
+	// 						return true;
+	// 					}
+	// 				};
+	// 				$this.transition( params );
+	// 		});
 
-		}
-	};
+	// 	}
+	// };
 
-	$( Phpngo.demo.init );
+	// $( Phpngo.demo.init );

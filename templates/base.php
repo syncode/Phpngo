@@ -8,11 +8,17 @@
 
 		// Styles
 		load('css', array(
-			'libs/bootstrap.min.css'
+			'libs/bootstrap.min.css',
+			'libs/animate.css'
 		));
 
 	?>
 	{ block styles }
+
+	<style type="text/css">
+		#demo-content-block>.animated{ position: absolute; }
+		#demo-content-block{ position: relative; }
+	</style>
 </head>
 <body>
 	<?php
@@ -39,7 +45,8 @@
 		load('js', array(
 			'http://code.jquery.com/jquery.min.js',
 			'libs/bootstrap-dropdowns.min.js',
-			'libs/core.js'
+			'libs/core.js',
+			'libs/transition.js'
 		));
 
 	?>
