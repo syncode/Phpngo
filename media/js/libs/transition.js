@@ -1,4 +1,15 @@
+/*
+based on 
+jQuery.js
+modernizr.js
+animate.css
+*/
+
 (function( $ ) {
+	// true while animating, prevent fast clicking and massing functionality
+	var doNotDisturb = false,
+		cssanimations = $('html').hasClass('cssanimations');
+		
 	var methods = {
 		init : function(options) {
 			// Create some defaults, extending them with any options that were provided
@@ -46,16 +57,18 @@
 					cache: {}
 				});
 			}
-
-			if( $target.data('settings').currentHref == $this.attr('href') ){
+			console.log("transfer before");
+			if( doNotDisturb || $target.data('settings').currentHref == $this.attr('href') ){
 				// navigation to current href
 				return;
 			}
+			console.log("transfer after");
 			
 			methods.animateOut($this);
 		},
 
 		animateOut: function($link){
+			doNotDisturb = true;
 			var href =$link.attr('href'),
 				settings = $link.data('transition'),
 				$target = settings.target,
@@ -71,21 +84,34 @@
 					// retrieve from server
 					$next = methods.request($link);
 				}
+				console.log($next[0]);
 			}else{
 				console.log("no href to navigate");
 			}
 
 			if( $prev != null ){
-				$prev.addClass( $link.data('transition').transitionClasses.out )
-						.bind('animationend webkitAnimationEnd MSAnimationEnd oAnimationEnd', function(){
-						    $prev.removeClass( $link.data('transition').transitionClasses.out )
-						    .hide()
-						    .unbind();
+				if(cssanimations){
+					$prev.addClass( $link.data('transition').transitionClasses.out )
+							.bind('animationend webkitAnimationEnd MSAnimationEnd oAnimationEnd', function(){
+							    $prev.removeClass( $link.data('transition').transitionClasses.out )
+							    .hide()
+							    .unbind();
 
-							if( $link.data('transition').waitForOut /*&& $next*/ ){
-								methods.animateIn($next, $link);
-							}
-						});
+								if( $link.data('transition').waitForOut /*&& $next*/ ){
+									methods.animateIn($next, $link);
+								}
+							});
+				
+				}else{
+					// no css animation
+					var prevWidth = $prev.outerWidth() * -1;
+					$prev.css('right', 'auto').animate({'left': prevWidth}, "slow", function(){ 
+						$prev.hide() 
+						if( $link.data('transition').waitForOut /*&& $next*/ ){
+							methods.animateIn($next, $link);
+						}
+					});
+				}
 			}else{
 				methods.animateIn($next, $link);
 			}
@@ -98,19 +124,30 @@
 		},
 
 		animateIn: function($next, $link){
+			console.log("animateIn");
 			$target = $link.data('transition').target;
 			$target.data('settings').currentHref = $link.attr('href');
-			
-			$next.show()
-				.addClass( $link.data('transition').transitionClasses.visited )
-				.bind('animationend webkitAnimationEnd MSAnimationEnd oAnimationEnd', function(){
-				    $next.removeClass( $link.data('transition').transitionClasses.visited )
-				    	.unbind();
-				});
+			if(cssanimations){
+				$next.show()
+					.addClass( $link.data('transition').transitionClasses.visited )
+					.bind('animationend webkitAnimationEnd MSAnimationEnd oAnimationEnd', function(){
+					    $next.removeClass( $link.data('transition').transitionClasses.visited )
+					    	.unbind();
+						doNotDisturb = false;
+					});
+			}else{
+				// no css animation
+				var nextWidth = $next.outerWidth();
+				$next.show().css({'right': -1 * nextWidth, 'left': 'auto'})
+					.animate({'right': 0, 'display': 'block'}, "slow", function(){doNotDisturb = false;} );
+			}
 
-			nextHeight = $next.prop('scrollHeight');
+			$next.css("overflow", "auto")
+			nextHeight = $next[0].scrollHeight;
+
+			console.log(nextHeight);
 			if( nextHeight > 0 ){
-				$target.animate({"height": $next.prop('scrollHeight')});
+				$target.animate({"height": nextHeight});
 			}
 		},
 
@@ -142,6 +179,8 @@
 		update_content: function(data, $newContentContainer, $target){
 			$newContentContainer.html(data)
 				.removeClass("loading");
+			
+			$newContentContainer.css("overflow", "auto")
 			$target.animate({"height": $newContentContainer.prop('scrollHeight')});
 		}
 

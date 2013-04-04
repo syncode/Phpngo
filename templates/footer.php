@@ -23,6 +23,7 @@
 			'http://code.jquery.com/jquery.min.js',
 			// 'libs/bootstrap-dropdowns.min.js',
 			'libs/core.js',
+			'libs/modernizr.js',
 			'libs/transition.js',
 			'ui.js',
 			'general.js'

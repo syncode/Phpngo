@@ -31,8 +31,8 @@
 	?>
 
 	<style type="text/css">
-		#demo-content-block>.animated{ position: absolute; }
-		#demo-content-block{ position: relative; }
+		#stage>.animated{ position: absolute; width: 100%;}
+		#stage{ position: relative; }
 	</style>
 </head>
 <body>
