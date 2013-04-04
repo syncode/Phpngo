@@ -29,11 +29,7 @@
 		));
 
 	?>
-
-	<style type="text/css">
-		#stage>.animated{ position: absolute; width: 100%;}
-		#stage{ position: relative; }
-	</style>
+	
 </head>
 <body>
 	<header>

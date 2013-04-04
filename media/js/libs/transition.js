@@ -142,8 +142,9 @@ animate.css
 					.animate({'right': 0, 'display': 'block'}, "slow", function(){doNotDisturb = false;} );
 			}
 
-			$next.css("overflow", "auto")
+			$next.css("overflow", "auto");
 			nextHeight = $next[0].scrollHeight;
+			$next.css("overflow", "hidden");
 
 			console.log(nextHeight);
 			if( nextHeight > 0 ){
@@ -166,7 +167,7 @@ animate.css
 				type: 'POST',
 				data: {
 					is_ajax: 'true',
-					block: 'main-content'
+					block: 'main-content',
 				},
 				success: function(data){ 
 					$target = $link.data('transition').target;
@@ -179,9 +180,12 @@ animate.css
 		update_content: function(data, $newContentContainer, $target){
 			$newContentContainer.html(data)
 				.removeClass("loading");
-			
-			$newContentContainer.css("overflow", "auto")
-			$target.animate({"height": $newContentContainer.prop('scrollHeight')});
+			setTimeout(function(){
+				$newContentContainer.css("overflow", "auto");
+				$target.animate({"height": $newContentContainer[0].scrollHeight});
+				$newContentContainer.css("overflow", "hidden");
+			}
+			,1000);
 		}
 
 	};

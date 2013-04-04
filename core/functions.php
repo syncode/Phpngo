@@ -15,7 +15,8 @@ function load( $media_type = 'CSS', $files = array() ){
 						?><link rel="stylesheet" href="<?php echo $file; ?>"><?php
 					}
 				}else{
-					?><link rel="stylesheet" href="<?php echo  CSS_URL . $file; ?>"><?php
+					?><link rel="stylesheet" href="<?php echo  CSS_URL . $file; ?>"/>
+					<?php
 				}
 			}
 
