@@ -2,7 +2,7 @@
 	include "header.php";
 ?>
 
-<div id="stage">
+<div id="stage" style="overflow: hidden;">
 
 </div>
 

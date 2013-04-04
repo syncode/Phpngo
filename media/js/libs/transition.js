@@ -11,7 +11,8 @@
 					out: 'bounceOut',
 					visited: 'bounceIn'
 				},
-				waitForOut: true
+				waitForOut: true,
+				preventDefault: true
 				// waitForOut: false
 			}, options);
 	
@@ -30,10 +31,13 @@
 		},
 
 		transfer: function(e){
-			e.preventDefault();
 			var $this = $(this),
 				settings = $this.data('transition'),
 				$target = settings.target;
+
+			if(settings.preventDefault){
+				e.preventDefault();
+			}
 
 			if( typeof $target.data('settings') == 'undefined' ){
 				$target.empty();
@@ -41,6 +45,11 @@
 					$current: null,
 					cache: {}
 				});
+			}
+
+			if( $target.data('settings').currentHref == $this.attr('href') ){
+				// navigation to current href
+				return;
 			}
 			
 			methods.animateOut($this);
@@ -89,12 +98,20 @@
 		},
 
 		animateIn: function($next, $link){
+			$target = $link.data('transition').target;
+			$target.data('settings').currentHref = $link.attr('href');
+			
 			$next.show()
 				.addClass( $link.data('transition').transitionClasses.visited )
 				.bind('animationend webkitAnimationEnd MSAnimationEnd oAnimationEnd', function(){
 				    $next.removeClass( $link.data('transition').transitionClasses.visited )
 				    	.unbind();
 				});
+
+			nextHeight = $next.prop('scrollHeight');
+			if( nextHeight > 0 ){
+				$target.animate({"height": $next.prop('scrollHeight')});
+			}
 		},
 
 		request: function($link){
@@ -114,14 +131,18 @@
 					is_ajax: 'true',
 					block: 'main-content'
 				},
-				success: function(data){ methods.update_content(data, $newContentContainer); }
+				success: function(data){ 
+					$target = $link.data('transition').target;
+					methods.update_content(data, $newContentContainer, $target); 
+				}
 			});
 			return $newContentContainer;
 		},
 
-		update_content: function(data, $newContentContainer){
+		update_content: function(data, $newContentContainer, $target){
 			$newContentContainer.html(data)
 				.removeClass("loading");
+			$target.animate({"height": $newContentContainer.prop('scrollHeight')});
 		}
 
 	};
@@ -142,7 +163,17 @@
 
 var transition = {
 	init: function(){
-		$('#main-menu .leyout li a').transition({ target: $('#stage') });
+		var settings = { 
+					target: $('#stage'),
+					transitionClasses: {
+						// animation classes to apply to content containers, based on animate.css on http://daneden.me/animate/
+						in: 'fadeInRightBig',
+						out: 'fadeOutLeftBig',
+						visited: 'fadeInRightBig'
+					},
+					waitForOut: false
+			 };
+		$('#main-menu .leyout li a').transition(settings);
 	}
 }
 

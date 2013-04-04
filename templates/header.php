@@ -29,7 +29,6 @@
 		));
 
 	?>
-	{ block styles }
 
 	<style type="text/css">
 		#demo-content-block>.animated{ position: absolute; }

@@ -21,7 +21,7 @@
 		// Scripts
 		load('js', array(
 			'http://code.jquery.com/jquery.min.js',
-			'libs/bootstrap-dropdowns.min.js',
+			// 'libs/bootstrap-dropdowns.min.js',
 			'libs/core.js',
 			'libs/transition.js',
 			'ui.js',
@@ -29,6 +29,5 @@
 		));
 
 	?>
-	{ block scripts }
 </body>
 </html>
