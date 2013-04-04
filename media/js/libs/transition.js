@@ -140,7 +140,7 @@
 
 var transition = {
 	init: function(){
-		$('#demo-menu li a').transition({ target: $('#demo-content-block') });
+		$('#main-menu .leyout li').transition({ target: $('#stage') });
 	}
 }
 
