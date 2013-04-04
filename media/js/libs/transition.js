@@ -109,9 +109,10 @@
 
 			$.ajax({
 				url: BASE_URL+href,
+				type: 'POST',
 				data: {
 					is_ajax: 'true',
-					block: 'demo-content'
+					block: 'main-content'
 				},
 				success: function(data){ methods.update_content(data, $newContentContainer); }
 			});

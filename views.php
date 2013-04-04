@@ -1,12 +1,5 @@
 <?php
 
-	function index( $url_params ){
-		$context = array(
-			'header_selected_menu_item' => 'Home'
-		);
-		render('index.php', $context);
-	}
-
 	// Demos
 	function demo_history( $url_params ){
 		$context = array(
@@ -30,4 +23,31 @@
 
 		echo 'ERROR:  cannont retrive >'.$requested_url.'< <br> wrong url';
 	}
-	
+
+	function index( $url_params ){
+		$context = array();
+		render('index.php', $context);
+	}	
+
+	function solutions( $url_params ){
+		$context = array();
+		render('solutions.php', $context);
+	}
+
+
+	function case_studies( $url_params ){
+		$context = array();
+		render('case_studies.php', $context);
+	}
+
+
+	function company( $url_params ){
+		$context = array();
+		render('company.php', $context);
+	}
+
+
+	function labs( $url_params ){
+		$context = array();
+		render('labs.php', $context);
+	}

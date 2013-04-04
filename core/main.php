@@ -10,6 +10,7 @@ class Main {
 
 		global $URLS, $_IS_URLS_BEEN_PROCESSED;
 		$uri = str_replace( BASE_URI, '', $_SERVER['REQUEST_URI'] );
+		$uri = $uri[0] == '/' ? substr($uri, 1) : $uri;
 
 		// URLS configuration
 		foreach ($URLS as $regex => $action){
