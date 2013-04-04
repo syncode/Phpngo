@@ -47,7 +47,7 @@
 		},
 
 		animateOut: function($link){
-			var href = $link.attr('href'),
+			var href =$link.attr('href'),
 				settings = $link.data('transition'),
 				$target = settings.target,
 				$prev = $target.data('settings').$current,
@@ -62,9 +62,10 @@
 					// retrieve from server
 					$next = methods.request($link);
 				}
+			}else{
+				console.log("no href to navigate");
 			}
 
-			console.log($next);
 			if( $prev != null ){
 				$prev.addClass( $link.data('transition').transitionClasses.out )
 						.bind('animationend webkitAnimationEnd MSAnimationEnd oAnimationEnd', function(){
@@ -107,7 +108,7 @@
 			$target.append($newContentContainer);
 
 			$.ajax({
-				url: href,
+				url: BASE_URL+href,
 				data: {
 					is_ajax: 'true',
 					block: 'demo-content'
@@ -140,7 +141,7 @@
 
 var transition = {
 	init: function(){
-		$('#main-menu .leyout li').transition({ target: $('#stage') });
+		$('#main-menu .leyout li a').transition({ target: $('#stage') });
 	}
 }
 

@@ -6,6 +6,10 @@
 	<title>Sinapsa - Internet Solutions</title>
 	<base href="<?php echo BASE_URL; ?> target="_top"">
 	
+	<!-- variables from server -->
+	<script type="text/javascript">
+		var BASE_URL = "<?php echo BASE_URL; ?>";
+	</script>
 
 	<!-- Mobile -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
